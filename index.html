@@ -393,20 +393,69 @@
                     </div>
                     
                     <div class="chart-container">
-                        <h4>五个核心指标说明：</h4>
-                        <ul style="margin: 10px 0; color: #666; font-size: 14px; line-height: 1.6;">
-                            <li><strong>一致性 (0.278)：</strong>速度和加速度变化的平滑程度</li>
-                            <li><strong>自然性 (0.000)：</strong>加速度分布是否符合正态分布</li>
-                            <li><strong>可预测性 (0.947)：</strong>速度序列的自相关性</li>
-                            <li><strong>能效 (0.463)：</strong>是否频繁做无效加减速</li>
-                            <li><strong>风格一致性 (0.026)：</strong>驾驶风格前后是否一致</li>
-                        </ul>
+                        <h4>五个核心指标详细解释：</h4>
+                        <div style="margin: 15px 0; color: #666; font-size: 14px; line-height: 1.8;">
+                            <div style="margin-bottom: 12px;">
+                                <strong style="color: #E74C3C;">🔴 一致性 (0.278)：</strong>
+                                <span style="color: #999;">测量轨迹变化的平滑程度</span><br>
+                                <span style="font-size: 12px; color: #666;">
+                                    计算公式：1/(1+速度变化标准差+加速度变化标准差)<br>
+                                    正常值：>0.8，当前值极低说明轨迹变化突兀
+                                </span>
+                            </div>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <strong style="color: #E74C3C;">🔴 自然性 (0.000)：</strong>
+                                <span style="color: #999;">检验是否符合人类驾驶的统计分布</span><br>
+                                <span style="font-size: 12px; color: #666;">
+                                    基于正态性检验，人类驾驶的加速度通常服从正态分布<br>
+                                    0.000表明完全不符合，有明显的人工生成痕迹
+                                </span>
+                            </div>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <strong style="color: #48BB78;">🟢 可预测性 (0.947)：</strong>
+                                <span style="color: #999;">速度序列的自相关程度</span><br>
+                                <span style="font-size: 12px; color: #666;">
+                                    基于相邻时刻速度的相关性，过高说明过于规律化<br>
+                                    真实驾驶应该在0.6-0.8之间，当前值过高缺乏随机性
+                                </span>
+                            </div>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <strong style="color: #ED8936;">🟡 能效 (0.463)：</strong>
+                                <span style="color: #999;">是否频繁做无效的加减速</span><br>
+                                <span style="font-size: 12px; color: #666;">
+                                    计算：1/(1+加速度符号变化次数/总长度)<br>
+                                    值越低说明加减速切换过于频繁，浪费能源
+                                </span>
+                            </div>
+                            
+                            <div style="margin-bottom: 0;">
+                                <strong style="color: #E74C3C;">🔴 风格一致性 (0.026)：</strong>
+                                <span style="color: #999;">整条轨迹的驾驶风格是否一致</span><br>
+                                <span style="font-size: 12px; color: #666;">
+                                    计算：1/(1+加速度变异系数)，变异系数=标准差/|均值|<br>
+                                    极低值说明驾驶行为前后矛盾，缺乏个性化特征
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- 物理约束分析 -->
                 <div class="analysis-section">
                     <h2 class="section-title">🚗 物理约束违反分析</h2>
+                    
+                    <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px;">
+                        <strong>约束标准说明：</strong><br>
+                        <span style="color: #666;">
+                            • <strong>舒适加速度：</strong>±2 m/s²（乘客感觉舒适的范围）<br>
+                            • <strong>物理加速度：</strong>+8/-12 m/s²（车辆物理极限）<br>
+                            • <strong>舒适Jerk：</strong>±2 m/s³（避免乘客不适的加速度变化率）<br>
+                            • <strong>物理Jerk：</strong>±5 m/s³（车辆控制系统的极限）
+                        </span>
+                    </div>
                     
                     <div class="metric-item">
                         <span class="metric-name">舒适加速度违反率</span>
@@ -415,6 +464,9 @@
                     </div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 15.2%"></div>
+                    </div>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                        15.2%的时间加速度超过±2 m/s²，会造成乘客不适
                     </div>
                     
                     <div class="metric-item">
@@ -425,6 +477,9 @@
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 10.1%"></div>
                     </div>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                        10.1%的时间超过车辆物理极限，实际无法执行
+                    </div>
                     
                     <div class="metric-item">
                         <span class="metric-name">舒适Jerk违反率</span>
@@ -433,6 +488,9 @@
                     </div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 26.1%"></div>
+                    </div>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                        超过1/4时间加速度变化过急，严重影响乘坐舒适性
                     </div>
                     
                     <div class="metric-item">
@@ -443,15 +501,24 @@
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 25.8%"></div>
                     </div>
-                    
-                    <div class="metric-item">
-                        <span class="metric-name">最大加速度</span>
-                        <span class="metric-value">729.7 m/s²</span>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                        1/4时间超过控制系统极限，车辆无法响应
                     </div>
                     
                     <div class="metric-item">
-                        <span class="metric-name">最大Jerk</span>
-                        <span class="metric-value">148580 m/s³</span>
+                        <span class="metric-name">平均最大加速度</span>
+                        <span class="metric-value"><span class="highlight-number">729.7 m/s²</span></span>
+                    </div>
+                    <div style="font-size: 12px; color: #E74C3C; font-weight: 600;">
+                        比正常值高91倍！（正常应≤8 m/s²）
+                    </div>
+                    
+                    <div class="metric-item">
+                        <span class="metric-name">平均最大Jerk</span>
+                        <span class="metric-value"><span class="highlight-number">148,580 m/s³</span></span>
+                    </div>
+                    <div style="font-size: 12px; color: #E74C3C; font-weight: 600;">
+                        比正常值高29,716倍！（正常应≤5 m/s³）
                     </div>
                 </div>
                 
